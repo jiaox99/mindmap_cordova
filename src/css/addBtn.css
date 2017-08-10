@@ -1,0 +1,8 @@
+#addBtn {
+    position:fixed;
+    bottom:5px;
+    width:32px;
+    height:32px;
+    right:5px;
+    z-index:1;
+}

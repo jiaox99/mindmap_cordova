@@ -1,0 +1,8 @@
+#homeBtn {
+    position:fixed;
+    top:5px;
+    width:32px;
+    height:32px;
+    left:5px;
+    z-index:1;
+}
