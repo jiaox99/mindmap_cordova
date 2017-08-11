@@ -30,37 +30,59 @@ export function startLoadMaps()
         console.log("deviceReady------------------------------");
         dispatch(deviceReadyAction());
 
-        window.requestFileSystem( global.LocalFileSystem.PERSISTENT, 0, (fs)=>{
-            let dirReader = fs.root.createReader();
-            dirReader.readEntries(entries=>{
-                // let maps = entries.map((entry, i)=>{
-                //     if (entry.isFile)
-                //     {
-                //         return {id:i, mapData:readyFile(entry)};
-                //     }
-                // });
-                // dispatch(allMapLoadedAction(maps));
-                let maps = [];
-                let readers = entries.map((entry, i)=>{
-                    return readFile( maps, entry, i );
-                });
-                Promise.all(readers).then(function(value){
-                    dispatch(allMapLoadedAction(maps));
-                });
+        if (global.device.platform === "Android" )
+        {
+            window.resolveLocalFileSystemURL( global.cordova.file.externalDataDirectory, dirEntry=>{
+                readFiles(dirEntry, dispatch);
             });
-        });
+        }
+        else
+        {
+            window.requestFileSystem( global.LocalFileSystem.PERSISTENT, 0, (fs)=>{
+                readFiles(fs.root, dispatch);
+            });
+        }
+        
     };
+}
+
+function readFiles(dirEntry, dispatch)
+{
+    let dirReader = dirEntry.createReader();
+    dirReader.readEntries(entries=>{
+        let maps = [];
+        let readers = entries.map((entry, i)=>{
+            return readFile( maps, entry, i );
+        });
+        Promise.all(readers).then(function(value){
+            dispatch(allMapLoadedAction(maps));
+        });
+    });
 }
 
 export function saveCurrentMapAction( mapData )
 {
-    window.requestFileSystem( global.LocalFileSystem.PERSISTENT, 0, (fs)=>{
-        fs.root.getFile( mapData[0].content+".km", {create:true, exclusive:false}, fileEntry=>{
-            writeFile( fileEntry, mapData);
+    if (global.device.platform === "Android" )
+    {
+        window.resolveLocalFileSystemURL( global.cordova.file.externalDataDirectory, dirEntry=>{
+            writeFileToDirEntry(dirEntry, mapData);
         });
-    });
+    }
+    else
+    {
+        window.requestFileSystem( global.LocalFileSystem.PERSISTENT, 0, (fs)=>{
+            writeFileToDirEntry(fs.root, mapData);
+        });
+    }
 
     return { type:MAP_SAVED };
+}
+
+function writeFileToDirEntry( dirEntry, mapData )
+{
+    dirEntry.getFile( mapData[0].uid+".km", {create:true, exclusive:false}, fileEntry=>{
+        writeFile( fileEntry, mapData);
+    });
 }
 
 function writeFile( fileEntry, mapData )
@@ -72,7 +94,7 @@ function writeFile( fileEntry, mapData )
         fileWriter.onerror = (error)=>{
             alert("Write file error");
         };
-        let str = JSON.stringify(mapData);
+        let str = JSON.stringify(convertToKM(mapData));
         let dataObj = new Blob([str], {type:"text/plain"});
         fileWriter.write(dataObj);
     });
@@ -85,11 +107,73 @@ function readFile(maps, fileEntry, i)
         let reader = new FileReader();
 
         reader.onloadend = ()=>{
-            maps[i] = {id:i, mapData:JSON.parse(reader.result)};
+            let oriData = JSON.parse(reader.result);
+
+            maps[i] = {id:i, mapData:oriData instanceof Array ? oriData : convertFromKM(oriData)};
             resolve(true);
         };
 
         reader.readAsText(file);
     });
     });
+}
+
+function convertToKM( mapData )
+{
+    let kmData = { root:convertToKMNode(mapData, 0) };
+    kmData.root.data.id = mapData[0].uid;
+
+    console.log( "convertToKM ------" );
+    console.log( kmData );
+    return kmData;
+}
+
+function convertToKMNode( mapData, i )
+{
+    return {
+        data:{
+            text:mapData[i].content
+        },
+        children:mapData[i].children.map(j=>{
+            return convertToKMNode(mapData, j);
+        })
+    };
+}
+
+function convertFromKM( kmData )
+{
+    let mapData = [];
+    convertFromKMNode( mapData, kmData.root );
+    if (kmData.root.data.id)
+    {
+        mapData[0].uid = kmData.root.data.id;
+    }
+    else
+    {
+        mapData[0].uid = new Date().getTime();
+    }
+
+    console.log( "convertFromKM ------" );
+    console.log( mapData );
+
+    return mapData;
+}
+
+function convertFromKMNode( mapData, kmNode )
+{
+    mapData.push( {id:mapData.length, content:kmNode.data.text, children:genChildren(mapData.length, kmNode.length)} );
+    kmNode.children.map(subNode=>{
+        convertFromKMNode( mapData, subNode );
+    });
+}
+
+function genChildren( pre, len )
+{
+    let arr = [];
+    for (let i=0; i<len; i++ )
+    {
+        arr.push(pre + i + 1);
+    }
+
+    return arr;
 }

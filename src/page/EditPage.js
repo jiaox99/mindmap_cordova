@@ -99,9 +99,10 @@ class EditPage extends Component
         let hw = document.body.clientWidth * 0.5;
         let hh = document.body.clientHeight * 0.5;
         let dragFlag = this.state.dragID >=0 && this.state.x >= 0;
+        let touchable = global.device && global.device.platform !== "browser";
         return (
             <div>
-                <svg width={hw * 2} height={hh * 2} onTouchMove={this.onTouchMoveHandler} onMouseMove={this.onMouseMoveHandler}>
+                <svg width={hw * 2} height={hh * 2} onTouchMove={touchable ? this.onTouchMoveHandler : null} onMouseMove={touchable ? null : this.onMouseMoveHandler}>
                     {
                         this.props.parentNode != null && <line y2={hh} x2={hw} y1="0" x1="16" stroke="#000000" />
                     }

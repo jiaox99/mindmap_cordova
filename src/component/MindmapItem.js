@@ -16,10 +16,10 @@ class MindmapItem extends Component
 
     render()
     {
-
+        let touchable = global.device && global.device.platform !== "browser";
         return (
         <li>
-            <a className="ui-btn" onClick={this.clickHandler}>{this.props.data.mapData[0].content}</a>
+            <a className="ui-btn" onTouchEnd={touchable ? this.clickHandler : null} onClick={touchable ? null : this.clickHandler}>{this.props.data.mapData[0].content}</a>
         </li>);
     }
 }

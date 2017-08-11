@@ -105,7 +105,7 @@ function allMap( state=[], action )
                 ...state,
                 {
                     id:state.length,
-                    mapData:[{id:0, content:"主题", children:[], parent:-1}]
+                    mapData:[{id:0, content:"主题", children:[], parent:-1, uid:new Date().getTime()}]
                 }
             ];
         }

@@ -26,8 +26,9 @@ class MButton extends Component
     render()
     {
         let classStr = "ui-btn ui-corner-all ui-btn-icon-notext " + this.props.btnType;
+        let touchable = global.device && global.device.platform !== "browser";
         return (
-            <a id={this.props.id} onClick={this.handleClick} className={classStr}>{this.props.label}</a>
+            <a id={this.props.id} onTouchEnd={touchable ? this.handleClick : null} onClick={touchable ? null : this.handleClick} className={classStr}>{this.props.label}</a>
         );
     }
 }

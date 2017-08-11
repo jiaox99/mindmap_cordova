@@ -87,8 +87,10 @@ class MindNode extends Component
             .replace('@x', this.props.x)
             .replace('@y', this.props.y);
         var textNode = <text style={textStyle} pointerEvents="none" x="0" y="0">{this.props.text}</text>;
+        let touchable = global.device && global.device.platform !== "browser";
         return (
-        <g transform={t} onTouchEnd={this.onMouseUpHandler} onMouseUp={this.onMouseUpHandler} cursor="pointer" onMouseDown={this.onMouseDownHandler} onTouchStart={this.onMouseDownHandler}>
+        <g transform={t} onTouchEnd={touchable ? this.onMouseUpHandler : null} onMouseUp={touchable ? null : this.onMouseUpHandler}
+            cursor="pointer" onMouseDown={touchable ? null : this.onMouseDownHandler} onTouchStart={touchable ? this.onMouseDownHandler : null}>
             {
                 this.props.type === TYPE_PLUS ? <circle fill="#FFFFFF" stroke="#000000" r={48 * this.props.type * 0.01}></circle> : <circle fill="#00ff00" stroke="#000000" r={48 * this.props.type * 0.01}></circle>
             }
