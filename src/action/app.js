@@ -161,7 +161,7 @@ function convertFromKM( kmData )
 
 function convertFromKMNode( mapData, kmNode )
 {
-    mapData.push( {id:mapData.length, content:kmNode.data.text, children:genChildren(mapData.length, kmNode.length)} );
+    mapData.push( {id:mapData.length, content:kmNode.data.text, children:genChildren(mapData.length, kmNode.children.length)} );
     kmNode.children.map(subNode=>{
         convertFromKMNode( mapData, subNode );
     });
