@@ -143,7 +143,8 @@ function convertToKMNode( mapData, i )
 function convertFromKM( kmData )
 {
     let mapData = [];
-    convertFromKMNode( mapData, kmData.root );
+    kmData.root.parent = -1;
+    convertFromKMNode( mapData, [kmData.root] );
     if (kmData.root.data.id)
     {
         mapData[0].uid = kmData.root.data.id;
@@ -159,12 +160,27 @@ function convertFromKM( kmData )
     return mapData;
 }
 
-function convertFromKMNode( mapData, kmNode )
+function convertFromKMNode( mapData, kmNodes )
 {
-    mapData.push( {id:mapData.length, content:kmNode.data.text, children:genChildren(mapData.length, kmNode.children.length)} );
-    kmNode.children.map(subNode=>{
-        convertFromKMNode( mapData, subNode );
+    // mapData.push( {id:mapData.length, content:kmNode.data.text, children:genChildren(mapData.length, kmNode.children.length)} );
+    let subNodes = [];
+    kmNodes.forEach( (kmNode, i)=>{
+        mapData.push({
+            id:mapData.length,
+            content:kmNode.data.text,
+            parent:kmNode.parent,
+            children:kmNode.children.map((subNode, j)=>{
+                subNodes.push(subNode);
+                subNode.parent = mapData.length;
+                return mapData.length + kmNodes.length - i + subNodes.length - 1;
+            })
+        });
     });
+    
+    if (subNodes.length > 0 )
+    {
+        convertFromKMNode( mapData, subNodes );
+    }
 }
 
 function genChildren( pre, len )
