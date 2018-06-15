@@ -5,22 +5,22 @@
 1. 本地先建一个同步的 cordova App
 1. git remote 添加本 repot
 
-```batch
-git remote add origin git@github.com:jiaox99/mindmap_cordova.git
-```
+    ```batch
+    git remote add origin git@github.com:jiaox99/mindmap_cordova.git
+    ```
 
 1. 安装依赖包（推荐用 yarn）
 
-```batch
-yarn install
-```
+    ```batch
+    yarn install
+    ```
 
 1. 构建并运行
 
-```batch
-yarn build
-cordova run browser
-```
+    ```batch
+    yarn build
+    cordova run browser
+    ```
 
 ## 技术栈
 
