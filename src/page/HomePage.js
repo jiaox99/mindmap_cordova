@@ -35,7 +35,7 @@ class HomePage extends Component
                         }
                     </ul>
                 </div>
-                <MButton id='addBtn' clickHandler={this.onClickHandler} btnType={BUTTON_ADD}/>
+                <MButton id='addBtn' clickHandler={this.onClickHandler} btnType={BUTTON_ADD} label=""/>
             </div>
         );
     }

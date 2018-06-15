@@ -1,9 +1,28 @@
-# 构建
+# 说明
 
-1. yarn install
-2. cordova plugin install
+## 构建
 
-# 技术栈
+1. 本地先建一个同步的 cordova App
+1. git remote 添加本 repot
+
+```batch
+git remote add origin git@github.com:jiaox99/mindmap_cordova.git
+```
+
+1. 安装依赖包（推荐用 yarn）
+
+```batch
+yarn install
+```
+
+1. 构建并运行
+
+```batch
+yarn build
+cordova run browser
+```
+
+## 技术栈
 
 * cordova
 * react
@@ -13,8 +32,9 @@
 * jquery
 * jquery-mobile
 
-# State Structure
-```
+## State Structure
+
+```JSON
 {
     deviceReady:false
     currentPage:"home_page",
@@ -33,7 +53,8 @@
     editMap:id_num
 }
 ```
-# TODO
+
+## TODO
 
 * 文件存储
     * 原始数据（节点数组，没有清理无效节点） done

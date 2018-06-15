@@ -183,13 +183,13 @@ function convertFromKMNode( mapData, kmNodes )
     }
 }
 
-function genChildren( pre, len )
-{
-    let arr = [];
-    for (let i=0; i<len; i++ )
-    {
-        arr.push(pre + i + 1);
-    }
+// function genChildren( pre, len )
+// {
+//     let arr = [];
+//     for (let i=0; i<len; i++ )
+//     {
+//         arr.push(pre + i + 1);
+//     }
 
-    return arr;
-}
+//     return arr;
+// }

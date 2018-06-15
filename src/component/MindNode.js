@@ -35,7 +35,7 @@ class MindNode extends Component
                 this.props.onDragEnd(this.props.id);
                 if (this.props.dragging === true)
                 {
-                    break;
+                    return;
                 }
             }
             case TYPE_PARENT:

@@ -6,8 +6,8 @@
     "main": "index.js",
     "homepage": "./",
     "scripts": {
-        "start": "node scripts/start.js",
-        "build": "node scripts/build.js && cordova build",
+        "start": "cordova run browser",
+        "build": "node scripts/build.js && cordova build browser",
         "test": "node scripts/test.js --env=jsdom"
     },
     "author": "Apache Cordova Team",
