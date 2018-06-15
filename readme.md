@@ -2,7 +2,7 @@
 
 ## 构建
 
-1. 本地先建一个同步的 cordova App
+1. 本地先建一个同名的 cordova App
 1. git remote 添加本 repot
 
     ```batch
